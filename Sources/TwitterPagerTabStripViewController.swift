@@ -32,6 +32,8 @@ public struct TwitterPagerTabStripSettings {
         public var portraitTitleFont = UIFont.systemFont(ofSize: 18)
         public var landscapeTitleFont = UIFont.systemFont(ofSize: 15)
         public var titleColor = UIColor.white
+        public var hideSingleDot: Bool = false
+        public var centerPageControl: Bool = false
     }
 
     public var style = Style()
@@ -213,7 +215,15 @@ open class TwitterPagerTabStripViewController: PagerTabStripViewController, Page
         pageControl.currentPage = currentIndex
         let viewSize = pageControl.sizeForNumber(ofPages: childTitleLabels.count)
         let originX = distance - viewSize.width / 2
-        pageControl.frame = CGRect(x: originX, y: navBarHeight - 10, width: viewSize.width, height: viewSize.height)
+        var originY = navBarHeight - 10
+        if self.settings.style.centerPageControl {
+            originY = navBarHeight / 2.0
+        }
+        pageControl.frame = CGRect(x: originX, y: originY, width: viewSize.width, height: viewSize.height)
+        
+        if self.settings.style.hideSingleDot {
+            pageControl.isHidden = childTitleLabels.count == 1
+        }
     }
 
     private func setAlphaWith(offset: CGFloat, andDistance distance: CGFloat) {
